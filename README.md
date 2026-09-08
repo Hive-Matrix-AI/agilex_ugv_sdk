@@ -33,8 +33,9 @@ on the shared interfaces to support another AgileX model.
 | --- | --- | --- |
 | SCOUT | SCOUT MINI | Supported |
 | SCOUT | SCOUT MINI OMNI | Supported |
+| RANGER | RANGER MINI 3.0 | Supported (offline tested) |
 
-Current model support covers SCOUT MINI and SCOUT MINI OMNI. Shared robot,
+Current model support covers SCOUT MINI, SCOUT MINI OMNI, and RANGER MINI 3.0. Shared robot,
 transport, and protocol interfaces provide the foundation for adding AgileX models.
 
 ## Quick start
@@ -66,7 +67,7 @@ configure your project with `-DCMAKE_PREFIX_PATH="$HOME/.local"`.
 | Option | Default | Purpose |
 | --- | --- | --- |
 | `BUILD_TESTING` | `ON` | Protocol and robot/transport tests without hardware |
-| `BUILD_EXAMPLES` | `OFF` | Standalone state-monitor example |
+| `BUILD_EXAMPLES` | `OFF` | Standalone state-monitor examples |
 
 </details>
 
@@ -94,7 +95,8 @@ Stop it with `Ctrl+C`.
 | `CanFrame` / `CanTransport` | Frame values and CAN I/O; SocketCAN is the provided backend |
 | `ProtocolCodec` / `ModelCapabilities` | Model-specific encoding, decoding, and supported features |
 | `Robot` | Compose a codec and transport; expose commands, state, and callbacks |
-| `ScoutMini` | Ready-to-use API for the currently supported SCOUT models |
+| `ScoutMini` | Ready-to-use API for the supported SCOUT models |
+| `RangerMiniV3` | RANGER MINI 3.0 motion modes, steering, drive mode, and BMS |
 
 Common commands and feedback use shared types. `ModelCommand` and
 `ModelFeedback` provide extension points for model-specific data.
@@ -108,15 +110,19 @@ include/agilex_ugv_sdk/
   protocol/               Codec interface and encode/decode results
   transport/              CAN frames, transport interface, and backends
   models/scout/           SCOUT MINI API and codec
+  models/ranger/          RANGER MINI 3.0 API, types, and codec
 src/
   core/                   Shared robot implementation
   transport/              Transport backends
   models/scout/           SCOUT MINI implementation
+  models/ranger/          RANGER MINI 3.0 implementation
 tests/
   core/                   Tests with model-independent codecs
   models/scout/           SCOUT API and protocol tests
+  models/ranger/          RANGER API and protocol tests
   support/                Shared test transports and assertions
 examples/scout/           Standalone SCOUT examples
+examples/ranger/          Standalone RANGER examples
 docs/reference/models/    Protocol references grouped by model family
 ```
 
@@ -163,6 +169,25 @@ the robot from the receive thread. See the
 formats, and controller timeout behavior.
 
 </details>
+
+## RANGER MINI 3.0
+
+Include `agilex_ugv_sdk/models/ranger/ranger_mini_v3.hpp` and construct
+`agilex::ugv::RangerMiniV3`. Use the same 500 kbit/s SocketCAN setup above, then
+run `./build/ranger_mini_v3_state can0` for a feedback-only monitor.
+
+The model supports Ackermann, parallel, spinning, and park modes, eight actuator
+channels, wheel angles and speeds, front/rear odometry, and BMS feedback.
+`set_motion(RangerMotionCommand{linear, steering, angular})` takes m/s, rad, and
+rad/s. Check `state().motion_mode` after `set_motion_mode()` to confirm the
+controller has finished switching. Steering above 0.698 rad is accepted only
+after parallel-mode feedback confirms completion; large turns are limited to
+0.7 m/s. `set_drive_mode()` selects current or voltage drive.
+
+The [Ranger CAN reference](docs/reference/models/ranger/ranger_mini_v3_can.md)
+records the Mini 3.0 manual's limits, frame lengths, 32-bit faults, light controls,
+error-clear codes, and differences from the older `ugv_sdk`. Protocol and API
+tests run without hardware; physical robot/firmware verification is pending.
 
 ## Integrations
 

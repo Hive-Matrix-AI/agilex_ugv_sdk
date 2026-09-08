@@ -29,7 +29,8 @@ struct ControlModeCommand {
 };
 
 struct ClearErrorCommand {
-  // 0 clears all errors; other values identify a motor.
+  // Model-specific clear code. SCOUT uses 0 for all errors and 1-4 for motors;
+  // other models may define additional fault selectors.
   std::uint8_t motor{0};
 };
 
@@ -41,7 +42,8 @@ class ModelCommand {
 };
 
 using ModelCommandPtr = std::shared_ptr<const ModelCommand>;
-using Command = std::variant<MotionCommand, LightCommand, ControlModeCommand,
-                             ClearErrorCommand, VersionRequest, ModelCommandPtr>;
+using Command =
+    std::variant<MotionCommand, LightCommand, ControlModeCommand,
+                 ClearErrorCommand, VersionRequest, ModelCommandPtr>;
 
 }  // namespace agilex::ugv

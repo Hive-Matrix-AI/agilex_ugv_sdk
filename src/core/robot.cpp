@@ -5,6 +5,7 @@
 #include <chrono>
 #include <stdexcept>
 #include <type_traits>
+#include <typeinfo>
 #include <utility>
 
 namespace agilex::ugv {
@@ -111,7 +112,16 @@ void Robot::update_state(const Feedback& feedback) {
           },
           [this](const OdometryState& value) { state_.odometry = value; },
           [this](const VersionInfo& value) { state_.version = value; },
-          [](const ModelFeedbackPtr&) {}},
+          [this](const ModelFeedbackPtr& value) {
+            if (!value) return;
+            for (auto& previous : state_.model_feedback) {
+              if (typeid(*previous) == typeid(*value)) {
+                previous = value;
+                return;
+              }
+            }
+            state_.model_feedback.push_back(value);
+          }},
       feedback);
   state_.updated_at = std::chrono::steady_clock::now();
 }

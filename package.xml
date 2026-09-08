@@ -2,7 +2,7 @@
 <package format="3">
   <name>agilex_ugv_sdk</name>
   <version>1.1.0</version>
-  <description>General-purpose C++17 SDK for new AgileX mobile robot models, currently supporting SCOUT MINI and SCOUT MINI OMNI.</description>
+  <description>General-purpose C++17 SDK for new AgileX mobile robot models, currently supporting SCOUT MINI, SCOUT MINI OMNI, and RANGER MINI 3.0.</description>
 
   <maintainer email="ruixiang.du@westonrobot.com">Ruixiang Du</maintainer>
   <license>Apache-2.0</license>

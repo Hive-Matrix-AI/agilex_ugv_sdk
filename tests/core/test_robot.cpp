@@ -70,7 +70,8 @@ void exercise_model(std::string_view name, std::uint32_t id) {
   auto* fake = transport.get();
   Robot robot{std::make_unique<TestCodec>(name, id), std::move(transport)};
 
-  expect(robot.capabilities().model_name == name, "capabilities come from codec");
+  expect(robot.capabilities().model_name == name,
+         "capabilities come from codec");
   expect(robot.send(VersionRequest{}) == Error::not_connected,
          "disconnected commands fail before encoding");
   fake->open_error = std::make_error_code(std::errc::permission_denied);
@@ -88,7 +89,8 @@ void exercise_model(std::string_view name, std::uint32_t id) {
   expect(robot.send(VersionRequest{}) == Error::unsupported_command,
          "codec errors propagate without sending a frame");
   fake->send_error = std::make_error_code(std::errc::io_error);
-  expect(robot.send(extension) == fake->send_error, "transport errors propagate");
+  expect(robot.send(extension) == fake->send_error,
+         "transport errors propagate");
   expect(fake->sent.size() == 1, "failed commands do not add frames");
 
   int callbacks = 0;
@@ -107,12 +109,22 @@ void exercise_model(std::string_view name, std::uint32_t id) {
   fake->inject(CanFrame{0x700, 8, {}});
   expect(callbacks == 1, "invalid and unknown frames do not reach consumers");
   fake->inject(CanFrame{id + 2U, 1, {}});
-  expect(received_extension && callbacks == 2, "model feedback reaches callback");
+  expect(received_extension && callbacks == 2,
+         "model feedback reaches callback");
+  const auto snapshot = robot.state();
+  expect(snapshot.model_state<AuxiliaryFeedback>() != nullptr,
+         "model-independent snapshots retain custom feedback");
+  fake->inject(CanFrame{id + 2U, 1, {}});
+  expect(robot.state().model_feedback.size() == 1 &&
+             robot.state().model_state<AuxiliaryFeedback>() !=
+                 snapshot.model_state<AuxiliaryFeedback>(),
+         "custom feedback replacement preserves earlier snapshots");
 
   robot.disconnect();
   expect(!robot.is_connected(), "disconnect closes transport");
   expect(!robot.connect("fake-can"), "reconnect succeeds");
-  expect(!robot.state().system && !robot.state().updated_at,
+  expect(!robot.state().system && !robot.state().updated_at &&
+             robot.state().model_feedback.empty(),
          "reconnect clears previous feedback");
 }
 

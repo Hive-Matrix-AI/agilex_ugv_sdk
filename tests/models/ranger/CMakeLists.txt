@@ -1,0 +1,7 @@
+add_executable(test_ranger_mini_v3_codec test_ranger_mini_v3_codec.cpp)
+target_link_libraries(test_ranger_mini_v3_codec PRIVATE agilex_ugv_sdk_test_support)
+add_test(NAME ranger_mini_v3_codec COMMAND test_ranger_mini_v3_codec)
+
+add_executable(test_ranger_mini_v3 test_ranger_mini_v3.cpp)
+target_link_libraries(test_ranger_mini_v3 PRIVATE agilex_ugv_sdk_test_support)
+add_test(NAME ranger_mini_v3_robot COMMAND test_ranger_mini_v3)

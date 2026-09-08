@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <variant>
 
 #include "agilex_ugv_sdk/core/robot_types.hpp"
@@ -14,7 +15,7 @@ struct SystemState {
   VehicleState vehicle_state{VehicleState::normal};
   ControlMode control_mode{ControlMode::standby};
   double battery_voltage_v{0.0};
-  std::uint16_t error_flags{0};
+  std::uint32_t error_flags{0};
   std::uint8_t count{0};
 };
 
@@ -22,6 +23,7 @@ struct MotionState {
   double linear_velocity_mps{0.0};
   double angular_velocity_radps{0.0};
   double lateral_velocity_mps{0.0};
+  std::optional<double> steering_angle_rad;
 };
 
 struct LightState {
@@ -50,6 +52,7 @@ struct ActuatorHighSpeedState {
   std::uint8_t index{0};
   std::int16_t speed_rpm{0};
   double current_a{0.0};
+  std::optional<std::int32_t> pulse_count;
 };
 
 struct ActuatorLowSpeedState {
@@ -82,9 +85,9 @@ class ModelFeedback {
 };
 
 using ModelFeedbackPtr = std::shared_ptr<const ModelFeedback>;
-using Feedback = std::variant<SystemState, MotionState, LightState,
-                              RemoteControlState, ActuatorHighSpeedState,
-                              ActuatorLowSpeedState, OdometryState, VersionInfo,
-                              ModelFeedbackPtr>;
+using Feedback =
+    std::variant<SystemState, MotionState, LightState, RemoteControlState,
+                 ActuatorHighSpeedState, ActuatorLowSpeedState, OdometryState,
+                 VersionInfo, ModelFeedbackPtr>;
 
 }  // namespace agilex::ugv

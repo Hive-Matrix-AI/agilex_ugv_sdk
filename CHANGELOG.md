@@ -1,5 +1,15 @@
 # Changelog for agilex_ugv_sdk
 
+## Unreleased
+
+- Added RANGER MINI 3.0 API, codec, state monitor, and protocol reference based on
+  the Mini 3.0 manual, with offline encoding/decoding and transport tests.
+- Added motion/drive mode selection, steering limits, eight actuator channels,
+  BMS, rear odometry, and 32-bit system fault feedback.
+- Shared snapshots retain model-specific feedback by type. Actuator arrays now
+  have eight slots; steering and pulse feedback are optional. Downstream C++
+  consumers must rebuild for the extended public state layouts.
+
 ## 1.1.0 (2026-09-08)
 
 - Organized public headers into core, protocol, transport, and model components.
