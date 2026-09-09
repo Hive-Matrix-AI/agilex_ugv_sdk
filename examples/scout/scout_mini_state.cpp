@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <iostream>
-#include <string_view>
 #include <thread>
 
 #include "agilex_ugv_sdk/models/scout/scout_mini.hpp"

@@ -1,31 +1,30 @@
 # AgileX UGV SDK
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C?logo=cplusplus&logoColor=white)](#quick-start)
 [![CMake](https://img.shields.io/badge/CMake-3.16%2B-064F8C?logo=cmake&logoColor=white)](#quick-start)
 [![Linux](https://img.shields.io/badge/platform-Linux-FCC624?logo=linux&logoColor=black)](#quick-start)
 [![SocketCAN](https://img.shields.io/badge/transport-SocketCAN-3C8D6E)](#connect-a-robot)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
-**A shared C++ foundation for new AgileX mobile robots.**
+**Connect and control new AgileX mobile robots with C++17.**
 
 `agilex_ugv_sdk` brings CAN communication, typed commands, and robot feedback
 into one extensible library. Use a model API to connect to your robot, or build
 on the shared interfaces to support another AgileX model.
 
 [Quick start](#quick-start) · [Supported models](#supported-models) ·
-[API](#api-overview) · [CAN reference](docs/reference/models/scout/scout_mini_can.md) ·
+[API](#api-overview) · [CAN references](#protocol-references) ·
 [Changelog](CHANGELOG.md)
 
 ## Highlights
 
-- **One core, multiple models.** Shared robot and transport interfaces with
-  model-specific protocol codecs and capability descriptions.
-- **Typed commands and feedback.** Explicit units, model limits, and
-  `std::error_code` results for connection and command failures.
-- **State you can use.** Thread-safe state snapshots and feedback callbacks
-  for motion, battery, actuators, lights, remote control, and version data.
-- **Easy to integrate and test.** C++17, an exported CMake target, Linux
-  SocketCAN, and injectable transports for tests without hardware.
+- SCOUT MINI, SCOUT MINI OMNI, and RANGER MINI 3.0 communication over SocketCAN.
+- Velocity, control-mode, light, and error-clear commands.
+- Motion, battery, motor, remote-control, and version feedback.
+- RANGER steering modes, wheel telemetry, and BMS feedback.
+- Standalone state monitors and tests that run without robot hardware.
 
 ## Supported models
 
@@ -35,8 +34,8 @@ on the shared interfaces to support another AgileX model.
 | SCOUT | SCOUT MINI OMNI | Supported |
 | RANGER | RANGER MINI 3.0 | Supported (offline tested) |
 
-Current model support covers SCOUT MINI, SCOUT MINI OMNI, and RANGER MINI 3.0. Shared robot,
-transport, and protocol interfaces provide the foundation for adding AgileX models.
+RANGER support has been validated with offline protocol and API tests, not on a
+physical robot. Verify compatibility with your model and firmware before motion.
 
 ## Quick start
 
@@ -73,7 +72,7 @@ configure your project with `-DCMAKE_PREFIX_PATH="$HOME/.local"`.
 
 ## Connect a robot
 
-For SCOUT MINI and SCOUT MINI OMNI, configure SocketCAN at **500 kbit/s**.
+For the supported models, configure SocketCAN at **500 kbit/s**.
 Replace `can0` with your adapter's interface:
 
 ```bash
@@ -184,10 +183,13 @@ controller has finished switching. Steering above 0.698 rad is accepted only
 after parallel-mode feedback confirms completion; large turns are limited to
 0.7 m/s. `set_drive_mode()` selects current or voltage drive.
 
-The [Ranger CAN reference](docs/reference/models/ranger/ranger_mini_v3_can.md)
-records the Mini 3.0 manual's limits, frame lengths, 32-bit faults, light controls,
-error-clear codes, and differences from the older `ugv_sdk`. Protocol and API
-tests run without hardware; physical robot/firmware verification is pending.
+See the [RANGER CAN reference (中文)](docs/reference/models/ranger/ranger_mini_v3_can.md)
+for command limits, frame formats, error codes, and firmware compatibility.
+
+## Protocol references
+
+- [SCOUT MINI / SCOUT MINI OMNI (中文)](docs/reference/models/scout/scout_mini_can.md)
+- [RANGER MINI 3.0 (中文)](docs/reference/models/ranger/ranger_mini_v3_can.md)
 
 ## Integrations
 

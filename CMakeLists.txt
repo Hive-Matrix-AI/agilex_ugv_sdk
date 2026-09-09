@@ -41,7 +41,8 @@ install(DIRECTORY include/agilex_ugv_sdk
 install(DIRECTORY docs/reference
   DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/docs
 )
-install(FILES LICENSE README.md CHANGELOG.md package.xml
+install(FILES LICENSE README.md README.zh-CN.md
+  CONTRIBUTING.md CONTRIBUTING.zh-CN.md CHANGELOG.md package.xml
   DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}
 )
 install(EXPORT agilex_ugv_sdkTargets

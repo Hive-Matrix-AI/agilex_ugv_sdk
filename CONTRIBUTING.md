@@ -1,5 +1,7 @@
 # Contributing
 
+[English](CONTRIBUTING.md) | [简体中文](CONTRIBUTING.zh-CN.md)
+
 ## Report a problem
 
 Open an [issue](https://github.com/Hive-Matrix-AI/agilex_ugv_sdk/issues) with the
@@ -13,6 +15,8 @@ Never repeat an unsafe motion to collect diagnostic data.
 Target the `main` branch. Keep changes focused and preserve existing license and
 attribution notices. Add tests for behavior changes and update the public API
 documentation when interfaces change.
+Keep the English and Simplified Chinese guides in sync, especially supported
+models, command units and limits, examples, and safety instructions.
 
 Keep the shared core, protocol interfaces, and transport layer independent of
 individual model families. Place model-specific APIs and codecs under

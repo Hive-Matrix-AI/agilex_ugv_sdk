@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added Simplified Chinese setup, API, and contribution guides with language links.
 - Added RANGER MINI 3.0 API, codec, state monitor, and protocol reference based on
   the Mini 3.0 manual, with offline encoding/decoding and transport tests.
 - Added motion/drive mode selection, steering limits, eight actuator channels,
